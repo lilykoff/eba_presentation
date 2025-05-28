@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+# Quarto render cache
+_quarto/
+
+# Figures directory
+*figures/
+*cache/
+*files/

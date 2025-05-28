@@ -1,0 +1,373 @@
+---
+title: "Walking"
+execute: 
+  echo: false
+  cache: true
+  warning: false
+  message: false
+  eval: true
+format: 
+  revealjs:
+    reference-location: document
+    theme: dark
+    incremental: true
+    progress: true
+author: "Lily Koffman" 
+date: "Joint EBA Meeting June 2 2025"
+institute: ""
+---
+
+
+## Steps journey
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+timeline <- data.frame(
+  time = c(1, 2, 3, 4, 5),
+  ypos = c(.5, -.5, .5, -.5, .5),
+  label = c("Fingerprinting:\nidentifying people from walking\nwith labeled walking data", "Step counting\n with labeled data", "Step counting\nin NHANES", "Mortality\nin NHANES", "Fingerprinting\n in NHANES")
+)
+
+ggplot(timeline, aes(x = time, y = ypos, label = label)) +
+  # Timeline arrow (centered at y = 0)
+  geom_segment(
+    aes(
+      x = min(time),
+      xend = max(time) + 0.5,
+      y = 0,
+      yend = 0
+    ),
+    arrow = arrow(type = "closed", length = unit(0.2, "inches")),
+    linewidth = 1.2,
+    color = "gray30"
+  ) +
+  
+  # Vertical connectors
+  geom_segment(
+    aes(
+      x = time,
+      xend = time,
+      y = 0,
+      yend = ypos
+    ),
+    color = "gray30",
+    linetype = "dashed"
+  ) +
+  
+  # Text bubbles
+  geom_label(fill = "#6DB6FF",
+             color = "black",
+             label.size = 0.3) +
+  # Clean theme
+  theme_minimal() +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank()
+  ) +
+  xlim(0, max(timeline$time) + 1) +
+  ylim(-2, 2)
+```
+
+
+---
+
+## Steps journey
+
+```{r}
+timeline = timeline %>% 
+  mutate(col = if_else(time == 1, "col1", "col2")) 
+ggplot(timeline, aes(x = time, y = ypos, label = label, fill = col)) +
+  # Timeline arrow (centered at y = 0)
+  geom_segment(
+    aes(
+      x = min(time),
+      xend = max(time) + 0.5,
+      y = 0,
+      yend = 0
+    ),
+    arrow = arrow(type = "closed", length = unit(0.2, "inches")),
+    linewidth = 1.2,
+    color = "gray30"
+  ) +
+  
+  # Vertical connectors
+  geom_segment(
+    aes(
+      x = time,
+      xend = time,
+      y = 0,
+      yend = ypos
+    ),
+    color = "gray30",
+    linetype = "dashed"
+  ) +
+  
+  # Text bubbles
+  geom_label(color = "black",
+             label.size = 0.3) +
+  # Clean theme
+  theme_minimal() +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank(),
+    legend.position = "none"
+  ) +
+  xlim(0, max(timeline$time) + 1) +
+  ylim(-2, 2) + 
+  scale_fill_manual(values = c("#FF6DB6", "#6DB6FF")) 
+```
+
+
+## Fingerprinting with labeled walking
+90-100\% accuracy  in two datasets of 30 and 150 individuals
+
+![](figures/fingerprint_wellpred.png)
+
+---
+
+```{r}
+timeline = timeline %>% 
+  mutate(col = if_else(time %in% c(2), "col1", "col2")) 
+ggplot(timeline, aes(x = time, y = ypos, label = label, fill = col)) +
+  # Timeline arrow (centered at y = 0)
+  geom_segment(
+    aes(
+      x = min(time),
+      xend = max(time) + 0.5,
+      y = 0,
+      yend = 0
+    ),
+    arrow = arrow(type = "closed", length = unit(0.2, "inches")),
+    linewidth = 1.2,
+    color = "gray30"
+  ) +
+  
+  # Vertical connectors
+  geom_segment(
+    aes(
+      x = time,
+      xend = time,
+      y = 0,
+      yend = ypos
+    ),
+    color = "gray30",
+    linetype = "dashed"
+  ) +
+  
+  # Text bubbles
+  geom_label(color = "black",
+             label.size = 0.3) +
+  # Clean theme
+  theme_minimal() +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank(),
+    legend.position = "none"
+  ) +
+  xlim(0, max(timeline$time) + 1) +
+  ylim(-2, 2) + 
+  scale_fill_manual(values = c("#FF6DB6", "#6DB6FF")) 
+```
+
+## Step counting with labeled data 
+
+Compare several step counting algorithms on data with ground truth step counts (3 datasets); Stepcount SSL has highest accuracy
+
+![](figures/accuracy.png)
+
+
+---
+
+```{r}
+timeline = timeline %>% 
+  mutate(col = if_else(time %in% c(3), "col1", "col2")) 
+ggplot(timeline, aes(x = time, y = ypos, label = label, fill = col)) +
+  # Timeline arrow (centered at y = 0)
+  geom_segment(
+    aes(
+      x = min(time),
+      xend = max(time) + 0.5,
+      y = 0,
+      yend = 0
+    ),
+    arrow = arrow(type = "closed", length = unit(0.2, "inches")),
+    linewidth = 1.2,
+    color = "gray30"
+  ) +
+  
+  # Vertical connectors
+  geom_segment(
+    aes(
+      x = time,
+      xend = time,
+      y = 0,
+      yend = ypos
+    ),
+    color = "gray30",
+    linetype = "dashed"
+  ) +
+  
+  # Text bubbles
+  geom_label(color = "black",
+             label.size = 0.3) +
+  # Clean theme
+  theme_minimal() +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank(),
+    legend.position = "none"
+  ) +
+  xlim(0, max(timeline$time) + 1) +
+  ylim(-2, 2) + 
+  scale_fill_manual(values = c("#FF6DB6", "#6DB6FF")) 
+```
+
+## Step counting in NHANES 
+
+Mean daily steps per day: large differences between algorithms
+
+![](figures/algos.png)
+
+---
+
+Similar pattern in change in mean daily steps with age 
+
+![](figures/pct_chg.png)
+
+---
+
+Interesting patterns by sex between steps and other PA measures
+
+![](figures/means_by_sex.png) 
+
+
+---
+
+```{r}
+timeline = timeline %>% 
+  mutate(col = if_else(time %in% c(4), "col1", "col2")) 
+ggplot(timeline, aes(x = time, y = ypos, label = label, fill = col)) +
+  # Timeline arrow (centered at y = 0)
+  geom_segment(
+    aes(
+      x = min(time),
+      xend = max(time) + 0.5,
+      y = 0,
+      yend = 0
+    ),
+    arrow = arrow(type = "closed", length = unit(0.2, "inches")),
+    linewidth = 1.2,
+    color = "gray30"
+  ) +
+  
+  # Vertical connectors
+  geom_segment(
+    aes(
+      x = time,
+      xend = time,
+      y = 0,
+      yend = ypos
+    ),
+    color = "gray30",
+    linetype = "dashed"
+  ) +
+  
+  # Text bubbles
+  geom_label(color = "black",
+             label.size = 0.3) +
+  # Clean theme
+  theme_minimal() +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank(),
+    legend.position = "none"
+  ) +
+  xlim(0, max(timeline$time) + 1) +
+  ylim(-2, 2) + 
+  scale_fill_manual(values = c("#FF6DB6", "#6DB6FF")) 
+```
+
+## Mortality in NHANES
+
+Dose-response relationship between steps and mortality
+
+![](figures/dose_response.png)
+
+
+
+## Cadence and mortality
+
+Peak variables maybe more important than totals
+
+![](figures/cadence_conc.png)
+---
+
+```{r}
+timeline = timeline %>% 
+  mutate(col = if_else(time %in% c(5), "col1", "col2")) 
+ggplot(timeline, aes(x = time, y = ypos, label = label, fill = col)) +
+  # Timeline arrow (centered at y = 0)
+  geom_segment(
+    aes(
+      x = min(time),
+      xend = max(time) + 0.5,
+      y = 0,
+      yend = 0
+    ),
+    arrow = arrow(type = "closed", length = unit(0.2, "inches")),
+    linewidth = 1.2,
+    color = "gray30"
+  ) +
+  
+  # Vertical connectors
+  geom_segment(
+    aes(
+      x = time,
+      xend = time,
+      y = 0,
+      yend = ypos
+    ),
+    color = "gray30",
+    linetype = "dashed"
+  ) +
+  
+  # Text bubbles
+  geom_label(color = "black",
+             label.size = 0.3) +
+  # Clean theme
+  theme_minimal() +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank(),
+    legend.position = "none"
+  ) +
+  xlim(0, max(timeline$time) + 1) +
+  ylim(-2, 2) + 
+  scale_fill_manual(values = c("#FF6DB6", "#6DB6FF")) 
+```
+
+## Fingerprinting in NHANES
+
+34\% rank-1 accuracy in 13,367 individuals: correct individual from everyone identified 34\% of the time! 
+
+![](figures/fingerprint_data.png)
+
+## Next steps 
+
++ Fingerprints associated with mortality
++ Clustering based on fingerprints
++ Mapping steps in other cohorts 
+
